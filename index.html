@@ -1,0 +1,347 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>❤️ Buat Kamu ❤️</title>
+  <style>
+    html, body {
+      height: 100%;
+      margin: 0;
+      padding: 0;
+      overflow: hidden;
+    }
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      text-align: center;
+      background: linear-gradient(135deg, #ff9a9e, #fad0c4 60%, #fcb69f 100%);
+      min-height: 100vh;
+      min-width: 100vw;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      touch-action: none;
+    }
+    h1 {
+      font-size: 2em;
+      color: #fff;
+      margin: 20px;
+      padding: 0 20px;
+      text-shadow: 1px 2px 8px #e57373;
+      letter-spacing: 1px;
+    }
+    .card-quiz {
+      background: rgba(255,255,255,0.18);
+      border-radius: 16px;
+      box-shadow: 0 2px 16px #f8bbd0;
+      padding: 18px 12px 12px 12px;
+      margin-bottom: 18px;
+      animation: fadeIn 1s;
+      max-width: 350px;
+    }
+    .quiz-q {
+      color: #d81b60;
+      font-size: 1.1em;
+      margin-bottom: 10px;
+      font-weight: bold;
+    }
+    .quiz-a {
+      margin-bottom: 10px;
+    }
+    .quiz-a input[type="radio"] {
+      margin-right: 8px;
+      accent-color: #ff4081;
+    }
+    .quiz-btn {
+      background: #ffb6b9;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 2px 8px #f8bbd0;
+      letter-spacing: 1px;
+      margin-top: 8px;
+    }
+    button {
+      padding: 15px 30px;
+      font-size: 17px;
+      border: none;
+      border-radius: 12px;
+      cursor: pointer;
+      margin: 10px;
+      transition: all 0.3s ease;
+      z-index: 2;
+      position: relative;
+      box-shadow: 0 2px 8px #f8bbd0;
+    }
+    #yesBtn {
+      background-color: #ff4081;
+      color: white;
+      font-weight: bold;
+      letter-spacing: 1px;
+    }
+    #noBtn {
+      background-color: #f44336;
+      color: white;
+      position: absolute;
+      left: 60%;
+      top: 60%;
+      min-width: 80px;
+      min-height: 40px;
+      touch-action: none;
+      font-weight: bold;
+    }
+    #message {
+      font-size: 22px;
+      color: #fff;
+      margin-top: 20px;
+      padding: 10px;
+      z-index: 2;
+      text-shadow: 1px 2px 8px #e57373;
+    }
+    #reasonBox {
+      margin-top: 25px;
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      animation: fadeIn 1s;
+      background: rgba(255,255,255,0.15);
+      border-radius: 16px;
+      padding: 18px 12px 12px 12px;
+      box-shadow: 0 2px 16px #f8bbd0;
+    }
+    #reasonInput {
+      padding: 12px;
+      font-size: 16px;
+      border-radius: 8px;
+      border: 1.5px solid #ffb6b9;
+      width: 220px;
+      margin-bottom: 12px;
+      outline: none;
+      box-shadow: 0 2px 8px #f8bbd0;
+      background: #fff8f8;
+      color: #d81b60;
+      text-align: center;
+    }
+    #sendReason {
+      background: #ffb6b9;
+      color: #fff;
+      font-weight: bold;
+      border: none;
+      border-radius: 8px;
+      padding: 10px 22px;
+      cursor: pointer;
+      font-size: 16px;
+      box-shadow: 0 2px 8px #f8bbd0;
+      letter-spacing: 1px;
+    }
+    .heart {
+      position: fixed;
+      top: -20px;
+      color: #ffb6b9;
+      font-size: 24px;
+      animation: fall linear forwards;
+      z-index: 1;
+      user-select: none;
+      pointer-events: none;
+    }
+    @keyframes fall {
+      to {
+        transform: translateY(100vh) rotate(360deg);
+        opacity: 0;
+      }
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+    @media (max-width: 600px) {
+      h1 { font-size: 1.2em; }
+      button, .quiz-btn { font-size: 14px; padding: 12px 20px; }
+      #message { font-size: 16px; }
+      #reasonInput { width: 140px; }
+      #reasonBox { padding: 10px 4px 8px 4px; }
+      .card-quiz { max-width: 98vw; }
+    }
+  </style>
+</head>
+<body>
+  <h1 id="mainTitle">Sebelum lanjut, jawab kuis santai ini dulu ya! 😊</h1>
+  <div id="quizBox" class="card-quiz"></div>
+  <button id="yesBtn" style="display:none;">Iya</button>
+  <button id="noBtn" style="display:none;">Gak</button>
+  <div id="message"></div>
+  <div id="reasonBox">
+    <div style="color:#fff; margin-bottom:8px; font-size:1.1em;">Tulis alasannya ya, kenapa mau jadi pacar aku? 😳💕</div>
+    <input id="reasonInput" maxlength="120" placeholder="Karena kamu...">
+    <button id="sendReason">Kirim Alasan</button>
+  </div>
+
+  <script>
+    // KUIS DATA
+    const quizzes = [
+      {
+        q: "1. Pilih warna favorit kamu:",
+        a: ["Merah", "Biru", "Pink", "Hijau"],
+        correct: null // semua boleh
+      },
+      {
+        q: "2. Pilih makanan yang paling kamu suka:",
+        a: ["Bakso", "Mie Ayam", "Sate", "Nasi Goreng"],
+        correct: null // semua boleh
+      },
+      {
+        q: "3. Kalau liburan, kamu lebih suka?",
+        a: ["Pantai", "Gunung", "Mall", "Rumah aja"],
+        correct: null // semua boleh
+      }
+    ];
+    let quizStep = 0;
+    let quizAnswers = [];
+    const quizBox = document.getElementById('quizBox');
+    const mainTitle = document.getElementById('mainTitle');
+    const yesBtn = document.getElementById('yesBtn');
+    const noBtn = document.getElementById('noBtn');
+    const message = document.getElementById('message');
+    const reasonBox = document.getElementById('reasonBox');
+    const reasonInput = document.getElementById('reasonInput');
+    const sendReason = document.getElementById('sendReason');
+    let sudahJawab = false;
+
+    // Daftar kata negatif/ejekan/larangan
+    const forbiddenWords = [
+      "jelek", "gak suka", "tidak suka", "benci", "bodoh", "goblok", "brengsek", "anjing", "bangsat", "kontol", "tolol", "gila", "ngapain", "nggak", "tidak", "ga mau", "gak mau", "jijik", "menjijikkan", "hina", "jahat", "sial", "mati", "brengsek", "males", "malas", "ogah", "ogah ah", "ogah deh", "ogah banget", "ogah banget dah", "ogah banget deh"
+    ];
+
+    // Render kuis
+    function renderQuiz() {
+      if (quizStep >= quizzes.length) {
+        quizBox.style.display = "none";
+        mainTitle.innerHTML = "Mau nggak jadi pacar aku? ❤️";
+        yesBtn.style.display = "";
+        noBtn.style.display = "";
+        return;
+      }
+      const q = quizzes[quizStep];
+      let html = `<div class="quiz-q">${q.q}</div>`;
+      q.a.forEach((ans, i) => {
+        html += `<div class="quiz-a"><label><input type="radio" name="quiz${quizStep}" value="${ans}"> ${ans}</label></div>`;
+      });
+      html += `<button class="quiz-btn" id="quizNextBtn">Lanjut</button>`;
+      quizBox.innerHTML = html;
+      document.getElementById('quizNextBtn').onclick = () => {
+        const selected = quizBox.querySelector('input[type="radio"]:checked');
+        if (!selected) {
+          quizBox.querySelector('.quiz-q').innerHTML += "<br><span style='color:#f44336;font-size:0.9em;'>Pilih dulu ya!</span>";
+          return;
+        }
+        quizAnswers.push(selected.value);
+        quizStep++;
+        renderQuiz();
+      };
+    }
+    renderQuiz();
+
+    yesBtn.onclick = () => {
+      yesBtn.style.display = "none";
+      noBtn.style.display = "none";
+      reasonBox.style.display = "flex";
+      message.innerHTML = "Yey! Kamu mau jadi pacar aku! 🥰<br><span style='font-size:16px;'>Tapi... kasih tau dong alasannya~</span>";
+      reasonInput.focus();
+    };
+
+    sendReason.onclick = () => {
+      const alasan = reasonInput.value.trim();
+      if (!alasan) {
+        reasonInput.focus();
+        reasonInput.style.borderColor = "#f44336";
+        return;
+      }
+      // Cek kata negatif
+      const alasanLower = alasan.toLowerCase();
+      for (const bad of forbiddenWords) {
+        if (alasanLower.includes(bad)) {
+          message.innerHTML = `<span style="color:#f44336;font-weight:bold;">Alasan harus bagus, sopan, dan positif ya! 🥺<br>Jangan pakai kata kasar atau ejekan.</span>`;
+          reasonInput.style.borderColor = "#f44336";
+          reasonInput.focus();
+          return;
+        }
+      }
+      reasonBox.style.display = "none";
+      sudahJawab = true;
+      message.innerHTML = `<span style="font-size:1.3em;">Makasih sayang! 😘❤️</span><br>
+        <span style="font-size:1.1em; color:#fff;">Alasan kamu:<br><i style="color:#ffe082;">"${alasan}"</i></span>
+        <br><br><a id="waLink" href="#" target="_blank" style="color:#fff; background:#25d366; padding:8px 18px; border-radius:8px; text-decoration:none; font-weight:bold; font-size:1.1em; box-shadow:0 2px 8px #b2dfdb;">Kirim ke WhatsApp Aku 💌</a>`;
+      // Efek animasi love
+      for (let i = 0; i < 25; i++) {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = 3 + Math.random() * 2 + "s";
+        heart.innerText = "💖";
+        document.body.appendChild(heart);
+        setTimeout(() => { heart.remove(); }, 5000);
+      }
+      // Buat link WhatsApp otomatis
+      setTimeout(() => {
+        const waLink = document.getElementById('waLink');
+        if (waLink) {
+          const alasanEncoded = encodeURIComponent(alasan);
+          waLink.href = `https://wa.me/6283141707524?text=Hai%20aku%20mau%20jadi%20pacar%20kamu%20karena:%20${alasanEncoded}`;
+        }
+      }, 100);
+    };
+
+    reasonInput.oninput = () => {
+      reasonInput.style.borderColor = "#ffb6b9";
+      message.innerHTML = "";
+    };
+
+    // Tombol Gak makin susah disentuh
+    function moveNoBtn(e) {
+      if (sudahJawab) return;
+      const maxX = window.innerWidth - noBtn.offsetWidth - 10;
+      const maxY = window.innerHeight - noBtn.offsetHeight - 10;
+      let x = Math.random() * maxX;
+      let y = Math.random() * maxY;
+      // Hindari terlalu dekat dengan tombol iya
+      const yesRect = yesBtn.getBoundingClientRect();
+      if (Math.abs(x - yesRect.left) < 80 && Math.abs(y - yesRect.top) < 80) {
+        x = (x + 100) % maxX;
+        y = (y + 100) % maxY;
+      }
+      noBtn.style.left = x + 'px';
+      noBtn.style.top = y + 'px';
+      e?.preventDefault();
+      e?.stopPropagation();
+      return false;
+    }
+    noBtn.addEventListener('touchstart', moveNoBtn, { passive: false });
+    noBtn.addEventListener('mouseover', moveNoBtn);
+    noBtn.addEventListener('click', moveNoBtn);
+
+    // Cegah keluar sebelum jawab (semaksimal mungkin)
+    window.onbeforeunload = function() {
+      if (!sudahJawab) return "Kamu belum jawab 😭";
+    };
+    document.addEventListener('visibilitychange', function() {
+      if (document.visibilityState === 'hidden' && !sudahJawab) {
+        alert("Jangan kabur dulu, jawab dulu ya 😭");
+      }
+    });
+    window.addEventListener('pagehide', function(e) {
+      if (!sudahJawab) e.preventDefault();
+    });
+
+    // Untuk HP: cegah swipe back/refresh (tidak 100% bisa di semua browser)
+    window.addEventListener('touchmove', function(e) {
+      if (!sudahJawab) e.preventDefault();
+    }, { passive: false });
+  </script>
+</body>
+</html>
