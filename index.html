@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>❤️ Buat Kamu ❤️</title>
-  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Segoe+Script&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
   <style>
     body, h1, .quiz-q, .quiz-a, #message, #reasonBox, #reasonInput, #sendReason {
       font-family: 'Segoe Script', 'Great Vibes', cursive, 'Comic Sans MS', sans-serif !important;
@@ -163,6 +163,11 @@
       from { opacity: 0; }
       to { opacity: 1; }
     }
+    @keyframes floatWord {
+      0% { transform: translateY(0) scale(1); opacity: 0.9; }
+      80% { opacity: 0.9; }
+      100% { transform: translateY(-60px) scale(1.2); opacity: 0; }
+    }
     @media (max-width: 600px) {
       h1 { font-size: 1.2em; }
       button, .quiz-btn { font-size: 14px; padding: 12px 20px; }
@@ -282,32 +287,72 @@
       const alasanLower = alasan.toLowerCase();
       for (const bad of forbiddenWords) {
         if (alasanLower.includes(bad)) {
-          message.innerHTML = `<span style="color:#fff; background:rgba(244,67,54,0.85); padding:10px 20px; border-radius:14px; box-shadow:0 2px 16px #f44336; font-size:1.15em; font-family:'Segoe Script',cursive;">Alasan kamu harus indah, sopan, dan penuh cinta ya sayang 💖<br>Jangan pakai kata negatif, aku ingin dengar yang terbaik dari kamu 😘</span>`;
+          message.innerHTML = `<span style="color:#fff; background:rgba(244,67,54,0.85); padding:10px 20px; border-radius:14px; box-shadow:0 2px 16px #f44336; font-size:1.15em;">Alasan kamu harus indah, sopan, dan penuh cinta ya sayang 💖<br>Jangan pakai kata negatif, aku ingin dengar yang terbaik dari kamu 😘</span>`;
           reasonInput.style.borderColor = "#f44336";
           reasonInput.focus();
           return;
         }
       }
-      // Hapus judul besar setelah alasan dikirim
       mainTitle.style.display = "none";
       reasonBox.style.display = "none";
       sudahJawab = true;
       message.innerHTML = `
-        <div style="font-size:2em; color:#fff; text-shadow:0 2px 16px #ffb6b9,0 0 24px #fff176;">💎 Terima kasih cintaku! 💎</div>
-        <div style="font-size:1.2em; color:#fff; margin:12px 0 8px 0; font-family:'Segoe Script',cursive; text-shadow:0 2px 12px #ffe082;">
-          Alasan kamu benar-benar menyentuh hati aku...<br>
-          <span style="display:inline-block; margin-top:8px; background:linear-gradient(90deg,#fffde4,#ffb6b9,#ffe082); border-radius:16px; padding:12px 24px; color:#d81b60; font-size:1.15em; font-family:'Segoe Script',cursive; box-shadow:0 2px 24px #ffe082;">
-            “${alasan}”
-          </span>
+        <div style="
+          background: linear-gradient(120deg, #fff0f6 60%, #ffe0e9 100%);
+          border-radius: 18px;
+          box-shadow: 0 4px 24px #ffd6e0, 0 1.5px 0 #fff;
+          padding: 20px 5vw 16px 5vw;
+          margin: 4vh auto 0 auto;
+          max-width: 370px;
+          color: #d81b60;
+          font-family: 'Montserrat', Arial, sans-serif;
+          font-size: 1em;
+          text-align: center;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 8px;
+        ">
+          <div style="font-size:1.5em; color:#ff4e8e; text-shadow:0 2px 12px #ffd6e0,0 0 16px #fff176; margin-bottom:6px;">💎 Terima kasih! 💎</div>
+          <div style="font-size:1em; margin:6px 0 4px 0;">
+            Alasan kamu benar-benar menyentuh hati...<br>
+            <span style="display:inline-block; margin-top:6px; background:linear-gradient(90deg,#fffde4,#ffb6b9,#ffe082); border-radius:12px; padding:8px 14px; color:#d81b60; font-size:0.98em; box-shadow:0 2px 12px #ffe082;">
+              “${alasan}”
+            </span>
+          </div>
+          <div style="margin:8px 0 2px 0; font-size:0.97em; color:#ff4e8e;">
+            Alasanmu akan langsung dikirim ke WhatsApp cowokmu ya!<br>
+          </div>
+          <a id="waLinkCowok" href="#" target="_blank" style="color:#fff; background:linear-gradient(90deg,#25d366,#43e97b,#38f9d7); padding:10px 22px; border-radius:14px; text-decoration:none; font-weight:bold; font-size:1em; box-shadow:0 2px 12px #b2dfdb; margin:8px 4px; display:inline-block; border:2px solid #fff;">Kirim ke WhatsApp cowokmu 💌</a>
+          <div style="margin-top:18px; font-size:0.92em; color:#bdbdbd;">
+            <hr style="border:none;border-top:1px solid #ffe0e9; margin:10px 0 6px 0;">
+            <span>Dibuat oleh <b style="color:#ff4e8e;">xobe development</b> &nbsp;|&nbsp; <a href="https://github.com/dev123dev33" target="_blank" style="color:#43e97b;text-decoration:underline;font-weight:bold;">github.com/dev123dev33</a></span>
+          </div>
         </div>
-        <div style="margin:18px 0 8px 0; font-size:1.1em; color:#fff; text-shadow:0 2px 8px #ffb6b9;">
-          Aku makin sayang sama kamu! 💖<br>
-          <span style="font-size:1.3em;">Mau aku simpan alasan indah ini di WhatsApp aku?</span>
-        </div>
-        <a id="waLink1" href="#" target="_blank" style="color:#fff; background:linear-gradient(90deg,#25d366,#43e97b,#38f9d7); padding:12px 28px; border-radius:16px; text-decoration:none; font-weight:bold; font-size:1.15em; box-shadow:0 2px 16px #b2dfdb; margin:8px 4px; display:inline-block; border:2px solid #fff;">Kirim ke WhatsApp Aku 💌</a>
-        <a id="waLink2" href="#" target="_blank" style="color:#fff; background:linear-gradient(90deg,#009688,#43e97b,#38f9d7); padding:12px 28px; border-radius:16px; text-decoration:none; font-weight:bold; font-size:1.15em; box-shadow:0 2px 16px #b2dfdb; margin:8px 4px; display:inline-block; border:2px solid #fff;">Kirim ke WhatsApp Satu Lagi 💌</a>
       `;
-      // Efek animasi love lebih banyak & glowing
+
+      // Animasi kata "I love" mengambang satu per satu
+      for (let i = 0; i < 10; i++) {
+        setTimeout(() => {
+          const word = document.createElement("div");
+          word.innerText = "I love";
+          word.style.position = "fixed";
+          word.style.left = Math.random() * 90 + "vw";
+          word.style.top = Math.random() * 80 + "vh";
+          word.style.fontSize = (22 + Math.random() * 18) + "px";
+          word.style.color = "#ff4e8e";
+          word.style.opacity = 0.85;
+          word.style.fontWeight = "bold";
+          word.style.pointerEvents = "none";
+          word.style.zIndex = 99;
+          word.style.animation = "floatWord 2.5s linear forwards";
+          word.style.textShadow = "0 0 12px #ffd6e0, 0 0 18px #fff";
+          document.body.appendChild(word);
+          setTimeout(() => word.remove(), 2500);
+        }, i * 350);
+      }
+
+      // Efek animasi love tetap
       for (let i = 0; i < 40; i++) {
         const heart = document.createElement("div");
         heart.classList.add("heart");
@@ -318,16 +363,13 @@
         document.body.appendChild(heart);
         setTimeout(() => { heart.remove(); }, 5000);
       }
-      // Buat link WhatsApp otomatis
+
+      // Buat link WhatsApp cowokmu otomatis (ganti nomornya sesuai kebutuhan)
       setTimeout(() => {
         const alasanEncoded = encodeURIComponent(alasan);
-        const waLink1 = document.getElementById('waLink1');
-        const waLink2 = document.getElementById('waLink2');
-        if (waLink1) {
-          waLink1.href = `https://wa.me/6283141707524?text=Hai%20aku%20mau%20jadi%20pacar%20kamu%20karena:%20${alasanEncoded}`;
-        }
-        if (waLink2) {
-          waLink2.href = `https://wa.me/6285215566645?text=Hai%20aku%20mau%20jadi%20pacar%20kamu%20karena:%20${alasanEncoded}`;
+        const waLinkCowok = document.getElementById('waLinkCowok');
+        if (waLinkCowok) {
+          waLinkCowok.href = `https://wa.me/6283141707524?text=Hai%20sayang%2C%20alasan%20aku%20mau%20jadi%20pacar%20kamu%20adalah%3A%20${alasanEncoded}`;
         }
       }, 100);
     };
