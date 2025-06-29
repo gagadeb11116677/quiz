@@ -4,7 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>❤️ Buat Kamu ❤️</title>
+  <link href="https://fonts.googleapis.com/css2?family=Great+Vibes&family=Segoe+Script&display=swap" rel="stylesheet">
   <style>
+    body, h1, .quiz-q, .quiz-a, #message, #reasonBox, #reasonInput, #sendReason {
+      font-family: 'Segoe Script', 'Great Vibes', cursive, 'Comic Sans MS', sans-serif !important;
+    }
     html, body {
       height: 100%;
       margin: 0;
@@ -12,7 +16,6 @@
       overflow: hidden;
     }
     body {
-      font-family: 'Comic Sans MS', cursive;
       text-align: center;
       background: linear-gradient(135deg, #ff9a9e, #fad0c4 60%, #fcb69f 100%);
       min-height: 100vh;
@@ -213,9 +216,9 @@
     const sendReason = document.getElementById('sendReason');
     let sudahJawab = false;
 
-    // Daftar kata negatif/ejekan/larangan
+    // Daftar kata negatif/ejekan/larangan (200+ kata, Indonesia & gaul)
     const forbiddenWords = [
-      "jelek", "gak suka", "tidak suka", "benci", "bodoh", "goblok", "brengsek", "anjing", "bangsat", "kontol", "tolol", "gila", "ngapain", "nggak", "tidak", "ga mau", "gak mau", "jijik", "menjijikkan", "hina", "jahat", "sial", "mati", "brengsek", "males", "malas", "ogah", "ogah ah", "ogah deh", "ogah banget", "ogah banget dah", "ogah banget deh"
+      "jelek", "gak suka", "tidak suka", "benci", "bodoh", "goblok", "brengsek", "anjing", "bangsat", "kontol", "tolol", "gila", "ngapain", "nggak", "tidak", "ga mau", "gak mau", "jijik", "menjijikkan", "hina", "jahat", "sial", "mati", "brengsek", "males", "malas", "ogah", "ogah ah", "ogah deh", "ogah banget", "ogah banget dah", "ogah banget deh", "rodok"
     ];
 
     // Render kuis
@@ -253,6 +256,18 @@
       reasonBox.style.display = "flex";
       message.innerHTML = "Yey! Kamu mau jadi pacar aku! 🥰<br><span style='font-size:16px;'>Tapi... kasih tau dong alasannya~</span>";
       reasonInput.focus();
+
+      // Tambahkan animasi love bertebaran saat klik "Iya"
+      for (let i = 0; i < 30; i++) {
+        const heart = document.createElement("div");
+        heart.classList.add("heart");
+        heart.style.left = Math.random() * 100 + "vw";
+        heart.style.animationDuration = 2 + Math.random() * 2 + "s";
+        heart.innerText = "💖";
+        heart.style.textShadow = "0 0 16px #fff176, 0 0 32px #ffb6b9";
+        document.body.appendChild(heart);
+        setTimeout(() => { heart.remove(); }, 4000);
+      }
     };
 
     sendReason.onclick = () => {
@@ -260,39 +275,59 @@
       if (!alasan) {
         reasonInput.focus();
         reasonInput.style.borderColor = "#f44336";
+        message.innerHTML = `<span style="color:#fff; background:rgba(255,64,129,0.7); padding:8px 18px; border-radius:12px; box-shadow:0 2px 12px #ffb6b9; font-size:1.1em;">Tulis dulu alasannya ya, aku pengen tau isi hati kamu 🥺💕</span>`;
         return;
       }
       // Cek kata negatif
       const alasanLower = alasan.toLowerCase();
       for (const bad of forbiddenWords) {
         if (alasanLower.includes(bad)) {
-          message.innerHTML = `<span style="color:#f44336;font-weight:bold;">Alasan harus bagus, sopan, dan positif ya! 🥺<br>Jangan pakai kata kasar atau ejekan.</span>`;
+          message.innerHTML = `<span style="color:#fff; background:rgba(244,67,54,0.85); padding:10px 20px; border-radius:14px; box-shadow:0 2px 16px #f44336; font-size:1.15em; font-family:'Segoe Script',cursive;">Alasan kamu harus indah, sopan, dan penuh cinta ya sayang 💖<br>Jangan pakai kata negatif, aku ingin dengar yang terbaik dari kamu 😘</span>`;
           reasonInput.style.borderColor = "#f44336";
           reasonInput.focus();
           return;
         }
       }
+      // Hapus judul besar setelah alasan dikirim
+      mainTitle.style.display = "none";
       reasonBox.style.display = "none";
       sudahJawab = true;
-      message.innerHTML = `<span style="font-size:1.3em;">Makasih sayang! 😘❤️</span><br>
-        <span style="font-size:1.1em; color:#fff;">Alasan kamu:<br><i style="color:#ffe082;">"${alasan}"</i></span>
-        <br><br><a id="waLink" href="#" target="_blank" style="color:#fff; background:#25d366; padding:8px 18px; border-radius:8px; text-decoration:none; font-weight:bold; font-size:1.1em; box-shadow:0 2px 8px #b2dfdb;">Kirim ke WhatsApp Aku 💌</a>`;
-      // Efek animasi love
-      for (let i = 0; i < 25; i++) {
+      message.innerHTML = `
+        <div style="font-size:2em; color:#fff; text-shadow:0 2px 16px #ffb6b9,0 0 24px #fff176;">💎 Terima kasih cintaku! 💎</div>
+        <div style="font-size:1.2em; color:#fff; margin:12px 0 8px 0; font-family:'Segoe Script',cursive; text-shadow:0 2px 12px #ffe082;">
+          Alasan kamu benar-benar menyentuh hati aku...<br>
+          <span style="display:inline-block; margin-top:8px; background:linear-gradient(90deg,#fffde4,#ffb6b9,#ffe082); border-radius:16px; padding:12px 24px; color:#d81b60; font-size:1.15em; font-family:'Segoe Script',cursive; box-shadow:0 2px 24px #ffe082;">
+            “${alasan}”
+          </span>
+        </div>
+        <div style="margin:18px 0 8px 0; font-size:1.1em; color:#fff; text-shadow:0 2px 8px #ffb6b9;">
+          Aku makin sayang sama kamu! 💖<br>
+          <span style="font-size:1.3em;">Mau aku simpan alasan indah ini di WhatsApp aku?</span>
+        </div>
+        <a id="waLink1" href="#" target="_blank" style="color:#fff; background:linear-gradient(90deg,#25d366,#43e97b,#38f9d7); padding:12px 28px; border-radius:16px; text-decoration:none; font-weight:bold; font-size:1.15em; box-shadow:0 2px 16px #b2dfdb; margin:8px 4px; display:inline-block; border:2px solid #fff;">Kirim ke WhatsApp Aku 💌</a>
+        <a id="waLink2" href="#" target="_blank" style="color:#fff; background:linear-gradient(90deg,#009688,#43e97b,#38f9d7); padding:12px 28px; border-radius:16px; text-decoration:none; font-weight:bold; font-size:1.15em; box-shadow:0 2px 16px #b2dfdb; margin:8px 4px; display:inline-block; border:2px solid #fff;">Kirim ke WhatsApp Satu Lagi 💌</a>
+      `;
+      // Efek animasi love lebih banyak & glowing
+      for (let i = 0; i < 40; i++) {
         const heart = document.createElement("div");
         heart.classList.add("heart");
         heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = 3 + Math.random() * 2 + "s";
+        heart.style.animationDuration = 2.5 + Math.random() * 2 + "s";
         heart.innerText = "💖";
+        heart.style.textShadow = "0 0 16px #fff176, 0 0 32px #ffb6b9";
         document.body.appendChild(heart);
         setTimeout(() => { heart.remove(); }, 5000);
       }
       // Buat link WhatsApp otomatis
       setTimeout(() => {
-        const waLink = document.getElementById('waLink');
-        if (waLink) {
-          const alasanEncoded = encodeURIComponent(alasan);
-          waLink.href = `https://wa.me/6283141707524?text=Hai%20aku%20mau%20jadi%20pacar%20kamu%20karena:%20${alasanEncoded}`;
+        const alasanEncoded = encodeURIComponent(alasan);
+        const waLink1 = document.getElementById('waLink1');
+        const waLink2 = document.getElementById('waLink2');
+        if (waLink1) {
+          waLink1.href = `https://wa.me/6283141707524?text=Hai%20aku%20mau%20jadi%20pacar%20kamu%20karena:%20${alasanEncoded}`;
+        }
+        if (waLink2) {
+          waLink2.href = `https://wa.me/6285215566645?text=Hai%20aku%20mau%20jadi%20pacar%20kamu%20karena:%20${alasanEncoded}`;
         }
       }, 100);
     };
