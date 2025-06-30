@@ -191,234 +191,282 @@
   </div>
 
   <script>
-    // KUIS DATA
-    const quizzes = [
-      {
-        q: "1. Pilih warna favorit kamu:",
-        a: ["Merah", "Biru", "Pink", "Hijau"],
-        correct: null // semua boleh
-      },
-      {
-        q: "2. Pilih makanan yang paling kamu suka:",
-        a: ["Bakso", "Mie Ayam", "Sate", "Nasi Goreng"],
-        correct: null // semua boleh
-      },
-      {
-        q: "3. Kalau liburan, kamu lebih suka?",
-        a: ["Pantai", "Gunung", "Mall", "Rumah aja"],
-        correct: null // semua boleh
-      }
-    ];
-    let quizStep = 0;
-    let quizAnswers = [];
-    const quizBox = document.getElementById('quizBox');
-    const mainTitle = document.getElementById('mainTitle');
-    const yesBtn = document.getElementById('yesBtn');
-    const noBtn = document.getElementById('noBtn');
-    const message = document.getElementById('message');
-    const reasonBox = document.getElementById('reasonBox');
-    const reasonInput = document.getElementById('reasonInput');
-    const sendReason = document.getElementById('sendReason');
-    let sudahJawab = false;
+  // KUIS DATA - Lebih banyak, lebih ringan, tidak curiga
+  const quizzes = [
+    { q: "1. Pilih warna favorit kamu:", a: ["Merah", "Biru", "Pink", "Hijau"], correct: null },
+    { q: "2. Pilih makanan yang paling kamu suka:", a: ["Bakso", "Mie Ayam", "Sate", "Nasi Goreng"], correct: null },
+    { q: "3. Kalau liburan, kamu lebih suka?", a: ["Pantai", "Gunung", "Mall", "Rumah aja"], correct: null },
+    { q: "4. Pilih minuman favorit:", a: ["Teh", "Kopi", "Jus", "Air Putih"], correct: null },
+    { q: "5. Kalau nonton film, genre favorit?", a: ["Romantis", "Horor", "Komedi", "Action"], correct: null },
+    { q: "6. Hewan peliharaan impian kamu?", a: ["Kucing", "Anjing", "Ikan", "Hamster"], correct: null },
+    { q: "7. Pilih waktu favorit:", a: ["Pagi", "Siang", "Sore", "Malam"], correct: null },
+    { q: "8. Kalau dikasih hadiah, pilih apa?", a: ["Bunga", "Coklat", "Boneka", "Surat"], correct: null },
+    { q: "9. Pilih satu: ", a: ["Matahari", "Bulan", "Bintang", "Pelangi"], correct: null },
+    { q: "10. Kalau punya kekuatan super, pilih?", a: ["Bisa terbang", "Bisa menghilang", "Baca pikiran", "Teleportasi"], correct: null }
+  ];
+  let quizStep = 0;
+  let quizAnswers = [];
+  const quizBox = document.getElementById('quizBox');
+  const mainTitle = document.getElementById('mainTitle');
+  const yesBtn = document.getElementById('yesBtn');
+  const noBtn = document.getElementById('noBtn');
+  const message = document.getElementById('message');
+  const reasonBox = document.getElementById('reasonBox');
+  const reasonInput = document.getElementById('reasonInput');
+  const sendReason = document.getElementById('sendReason');
+  let sudahJawab = false;
 
-    // Daftar kata negatif/ejekan/larangan (200+ kata, Indonesia & gaul)
-    const forbiddenWords = [
-      "jelek", "gak suka", "tidak suka", "benci", "bodoh", "goblok", "brengsek", "anjing", "bangsat", "kontol", "tolol", "gila", "ngapain", "nggak", "tidak", "ga mau", "gak mau", "jijik", "menjijikkan", "hina", "jahat", "sial", "mati", "brengsek", "males", "malas", "ogah", "ogah ah", "ogah deh", "ogah banget", "ogah banget dah", "ogah banget deh", "rodok"
-    ];
+  // Daftar kata negatif/ejekan/larangan
+  const forbiddenWords = [
+    "jelek", "gak suka", "tidak suka", "benci", "bodoh", "goblok", "brengsek", "anjing", "bangsat", "kontol", "tolol", "gila", "ngapain", "nggak", "tidak", "ga mau", "gak mau", "jijik", "menjijikkan", "hina", "jahat", "sial", "mati", "brengsek", "males", "malas", "ogah", "ogah ah", "ogah deh", "ogah banget", "ogah banget dah", "ogah banget deh", "rodok"
+  ];
 
-    // Render kuis
-    function renderQuiz() {
-      if (quizStep >= quizzes.length) {
-        quizBox.style.display = "none";
-        mainTitle.innerHTML = "Mau nggak jadi pacar aku? ❤️";
-        yesBtn.style.display = "";
-        noBtn.style.display = "";
+  // Efek balon
+  function spawnBalloon() {
+    const balloon = document.createElement("div");
+    balloon.innerText = "🎈";
+    balloon.style.position = "fixed";
+    balloon.style.left = Math.random() * 90 + "vw";
+    balloon.style.bottom = "-40px";
+    balloon.style.fontSize = (32 + Math.random() * 24) + "px";
+    balloon.style.opacity = 0.8;
+    balloon.style.zIndex = 10;
+    balloon.style.animation = `balloonUp ${2 + Math.random() * 2}s linear forwards`;
+    document.body.appendChild(balloon);
+    setTimeout(() => balloon.remove(), 4000);
+  }
+  // Efek confetti
+  function spawnConfetti() {
+    const conf = document.createElement("div");
+    conf.innerText = "✨";
+    conf.style.position = "fixed";
+    conf.style.left = Math.random() * 100 + "vw";
+    conf.style.top = "-20px";
+    conf.style.fontSize = (18 + Math.random() * 18) + "px";
+    conf.style.opacity = 0.8;
+    conf.style.zIndex = 10;
+    conf.style.animation = `fallConfetti ${1.5 + Math.random() * 1.5}s linear forwards`;
+    document.body.appendChild(conf);
+    setTimeout(() => conf.remove(), 3000);
+  }
+
+  // Animasi CSS
+  const style = document.createElement('style');
+  style.innerHTML = `
+    @keyframes balloonUp {
+      to { transform: translateY(-110vh) scale(1.2); opacity: 0.7; }
+    }
+    @keyframes fallConfetti {
+      to { transform: translateY(110vh) rotate(360deg) scale(1.3); opacity: 0; }
+    }
+  `;
+  document.head.appendChild(style);
+
+  // Render kuis
+  function renderQuiz() {
+    if (quizStep >= quizzes.length) {
+      quizBox.style.display = "none";
+      mainTitle.innerHTML = "Mau nggak jadi pacar aku? ❤️";
+      yesBtn.style.display = "";
+      noBtn.style.display = "";
+      // Efek balon & confetti
+      for (let i = 0; i < 18; i++) setTimeout(spawnBalloon, i * 120);
+      for (let i = 0; i < 22; i++) setTimeout(spawnConfetti, i * 80);
+      return;
+    }
+    const q = quizzes[quizStep];
+    let html = `<div class="quiz-q">${q.q}</div>`;
+    q.a.forEach((ans, i) => {
+      html += `<div class="quiz-a"><label><input type="radio" name="quiz${quizStep}" value="${ans}"> ${ans}</label></div>`;
+    });
+    html += `<button class="quiz-btn" id="quizNextBtn">Lanjut</button>`;
+    quizBox.innerHTML = html;
+    // Efek balon tiap pertanyaan
+    for (let i = 0; i < 3; i++) setTimeout(spawnBalloon, i * 100);
+    document.getElementById('quizNextBtn').onclick = () => {
+      const selected = quizBox.querySelector('input[type="radio"]:checked');
+      if (!selected) {
+        quizBox.querySelector('.quiz-q').innerHTML += "<br><span style='color:#f44336;font-size:0.9em;'>Pilih dulu ya!</span>";
         return;
       }
-      const q = quizzes[quizStep];
-      let html = `<div class="quiz-q">${q.q}</div>`;
-      q.a.forEach((ans, i) => {
-        html += `<div class="quiz-a"><label><input type="radio" name="quiz${quizStep}" value="${ans}"> ${ans}</label></div>`;
-      });
-      html += `<button class="quiz-btn" id="quizNextBtn">Lanjut</button>`;
-      quizBox.innerHTML = html;
-      document.getElementById('quizNextBtn').onclick = () => {
-        const selected = quizBox.querySelector('input[type="radio"]:checked');
-        if (!selected) {
-          quizBox.querySelector('.quiz-q').innerHTML += "<br><span style='color:#f44336;font-size:0.9em;'>Pilih dulu ya!</span>";
-          return;
-        }
-        quizAnswers.push(selected.value);
-        quizStep++;
-        renderQuiz();
-      };
-    }
-    renderQuiz();
+      quizAnswers.push(selected.value);
+      quizStep++;
+      renderQuiz();
+    };
+  }
+  renderQuiz();
 
-    yesBtn.onclick = () => {
-      yesBtn.style.display = "none";
-      noBtn.style.display = "none";
-      reasonBox.style.display = "flex";
-      message.innerHTML = "Yey! Kamu mau jadi pacar aku! 🥰<br><span style='font-size:16px;'>Tapi... kasih tau dong alasannya~</span>";
+  yesBtn.onclick = () => {
+    yesBtn.style.display = "none";
+    noBtn.style.display = "none";
+    reasonBox.style.display = "flex";
+    message.innerHTML = "Yey! Kamu mau jadi pacar aku! 🥰<br><span style='font-size:16px;'>Tapi... kasih tau dong alasannya~</span>";
+    reasonInput.focus();
+
+    // Animasi love bertebaran
+    for (let i = 0; i < 30; i++) {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = 2 + Math.random() * 2 + "s";
+      heart.innerText = "💖";
+      heart.style.textShadow = "0 0 16px #fff176, 0 0 32px #ffb6b9";
+      document.body.appendChild(heart);
+      setTimeout(() => { heart.remove(); }, 4000);
+    }
+    // Efek confetti
+    for (let i = 0; i < 18; i++) setTimeout(spawnConfetti, i * 80);
+  };
+
+  sendReason.onclick = () => {
+    const alasan = reasonInput.value.trim();
+    if (!alasan) {
       reasonInput.focus();
-
-      // Tambahkan animasi love bertebaran saat klik "Iya"
-      for (let i = 0; i < 30; i++) {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = 2 + Math.random() * 2 + "s";
-        heart.innerText = "💖";
-        heart.style.textShadow = "0 0 16px #fff176, 0 0 32px #ffb6b9";
-        document.body.appendChild(heart);
-        setTimeout(() => { heart.remove(); }, 4000);
-      }
-    };
-
-    sendReason.onclick = () => {
-      const alasan = reasonInput.value.trim();
-      if (!alasan) {
-        reasonInput.focus();
+      reasonInput.style.borderColor = "#f44336";
+      message.innerHTML = `<span style="color:#fff; background:rgba(255,64,129,0.7); padding:8px 18px; border-radius:12px; box-shadow:0 2px 12px #ffb6b9; font-size:1.1em;">Tulis dulu alasannya ya, aku pengen tau isi hati kamu 🥺💕</span>`;
+      return;
+    }
+    // Cek kata negatif
+    const alasanLower = alasan.toLowerCase();
+    for (const bad of forbiddenWords) {
+      if (alasanLower.includes(bad)) {
+        message.innerHTML = `<span style="color:#fff; background:rgba(244,67,54,0.85); padding:10px 20px; border-radius:14px; box-shadow:0 2px 16px #f44336; font-size:1.15em;">Alasan kamu harus indah, sopan, dan penuh cinta ya sayang 💖<br>Jangan pakai kata negatif, aku ingin dengar yang terbaik dari kamu 😘</span>`;
         reasonInput.style.borderColor = "#f44336";
-        message.innerHTML = `<span style="color:#fff; background:rgba(255,64,129,0.7); padding:8px 18px; border-radius:12px; box-shadow:0 2px 12px #ffb6b9; font-size:1.1em;">Tulis dulu alasannya ya, aku pengen tau isi hati kamu 🥺💕</span>`;
+        reasonInput.focus();
         return;
       }
-      // Cek kata negatif
-      const alasanLower = alasan.toLowerCase();
-      for (const bad of forbiddenWords) {
-        if (alasanLower.includes(bad)) {
-          message.innerHTML = `<span style="color:#fff; background:rgba(244,67,54,0.85); padding:10px 20px; border-radius:14px; box-shadow:0 2px 16px #f44336; font-size:1.15em;">Alasan kamu harus indah, sopan, dan penuh cinta ya sayang 💖<br>Jangan pakai kata negatif, aku ingin dengar yang terbaik dari kamu 😘</span>`;
-          reasonInput.style.borderColor = "#f44336";
-          reasonInput.focus();
-          return;
-        }
-      }
-      mainTitle.style.display = "none";
-      reasonBox.style.display = "none";
-      sudahJawab = true;
-      message.innerHTML = `
-        <div style="
-          background: linear-gradient(120deg, #fff0f6 60%, #ffe0e9 100%);
-          border-radius: 18px;
-          box-shadow: 0 4px 24px #ffd6e0, 0 1.5px 0 #fff;
-          padding: 20px 5vw 16px 5vw;
-          margin: 4vh auto 0 auto;
-          max-width: 370px;
-          color: #d81b60;
-          font-family: 'Montserrat', Arial, sans-serif;
-          font-size: 1em;
-          text-align: center;
-          display: flex;
-          flex-direction: column;
-          align-items: center;
-          gap: 8px;
-        ">
-          <div style="font-size:1.5em; color:#ff4e8e; text-shadow:0 2px 12px #ffd6e0,0 0 16px #fff176; margin-bottom:6px;">💎 Terima kasih! 💎</div>
-          <div style="font-size:1em; margin:6px 0 4px 0;">
-            Alasan kamu benar-benar menyentuh hati...<br>
-            <span style="display:inline-block; margin-top:6px; background:linear-gradient(90deg,#fffde4,#ffb6b9,#ffe082); border-radius:12px; padding:8px 14px; color:#d81b60; font-size:0.98em; box-shadow:0 2px 12px #ffe082;">
-              “${alasan}”
-            </span>
-          </div>
-          <div style="margin:8px 0 2px 0; font-size:0.97em; color:#ff4e8e;">
-            Alasanmu akan langsung dikirim ke WhatsApp cowokmu ya!<br>
-          </div>
-          <a id="waLinkCowok" href="#" target="_blank" style="color:#fff; background:linear-gradient(90deg,#25d366,#43e97b,#38f9d7); padding:10px 22px; border-radius:14px; text-decoration:none; font-weight:bold; font-size:1em; box-shadow:0 2px 12px #b2dfdb; margin:8px 4px; display:inline-block; border:2px solid #fff;">Kirim ke WhatsApp cowokmu 💌</a>
-          <div style="margin-top:18px; font-size:0.92em; color:#bdbdbd;">
-            <hr style="border:none;border-top:1px solid #ffe0e9; margin:10px 0 6px 0;">
-            <span>Dibuat oleh <b style="color:#ff4e8e;">xobe development</b> &nbsp;|&nbsp; <a href="https://github.com/dev123dev33" target="_blank" style="color:#43e97b;text-decoration:underline;font-weight:bold;">github.com/dev123dev33</a></span>
-          </div>
-        </div>
-      `;
-
-      // Animasi kata "I love" mengambang satu per satu
-      for (let i = 0; i < 10; i++) {
-        setTimeout(() => {
-          const word = document.createElement("div");
-          word.innerText = "I love";
-          word.style.position = "fixed";
-          word.style.left = Math.random() * 90 + "vw";
-          word.style.top = Math.random() * 80 + "vh";
-          word.style.fontSize = (22 + Math.random() * 18) + "px";
-          word.style.color = "#ff4e8e";
-          word.style.opacity = 0.85;
-          word.style.fontWeight = "bold";
-          word.style.pointerEvents = "none";
-          word.style.zIndex = 99;
-          word.style.animation = "floatWord 2.5s linear forwards";
-          word.style.textShadow = "0 0 12px #ffd6e0, 0 0 18px #fff";
-          document.body.appendChild(word);
-          setTimeout(() => word.remove(), 2500);
-        }, i * 350);
-      }
-
-      // Efek animasi love tetap
-      for (let i = 0; i < 40; i++) {
-        const heart = document.createElement("div");
-        heart.classList.add("heart");
-        heart.style.left = Math.random() * 100 + "vw";
-        heart.style.animationDuration = 2.5 + Math.random() * 2 + "s";
-        heart.innerText = "💖";
-        heart.style.textShadow = "0 0 16px #fff176, 0 0 32px #ffb6b9";
-        document.body.appendChild(heart);
-        setTimeout(() => { heart.remove(); }, 5000);
-      }
-
-      // Buat link WhatsApp cowokmu otomatis (ganti nomornya sesuai kebutuhan)
-      setTimeout(() => {
-        const alasanEncoded = encodeURIComponent(alasan);
-        const waLinkCowok = document.getElementById('waLinkCowok');
-        if (waLinkCowok) {
-          waLinkCowok.href = `https://wa.me/6283141707524?text=Hai%20sayang%2C%20alasan%20aku%20mau%20jadi%20pacar%20kamu%20adalah%3A%20${alasanEncoded}`;
-        }
-      }, 100);
-    };
-
-    reasonInput.oninput = () => {
-      reasonInput.style.borderColor = "#ffb6b9";
-      message.innerHTML = "";
-    };
-
-    // Tombol Gak makin susah disentuh
-    function moveNoBtn(e) {
-      if (sudahJawab) return;
-      const maxX = window.innerWidth - noBtn.offsetWidth - 10;
-      const maxY = window.innerHeight - noBtn.offsetHeight - 10;
-      let x = Math.random() * maxX;
-      let y = Math.random() * maxY;
-      // Hindari terlalu dekat dengan tombol iya
-      const yesRect = yesBtn.getBoundingClientRect();
-      if (Math.abs(x - yesRect.left) < 80 && Math.abs(y - yesRect.top) < 80) {
-        x = (x + 100) % maxX;
-        y = (y + 100) % maxY;
-      }
-      noBtn.style.left = x + 'px';
-      noBtn.style.top = y + 'px';
-      e?.preventDefault();
-      e?.stopPropagation();
-      return false;
     }
-    noBtn.addEventListener('touchstart', moveNoBtn, { passive: false });
-    noBtn.addEventListener('mouseover', moveNoBtn);
-    noBtn.addEventListener('click', moveNoBtn);
+    mainTitle.style.display = "none";
+    reasonBox.style.display = "none";
+    sudahJawab = true;
+    message.innerHTML = `
+      <div style="
+        background: linear-gradient(120deg, #fff0f6 60%, #ffe0e9 100%);
+        border-radius: 18px;
+        box-shadow: 0 4px 24px #ffd6e0, 0 1.5px 0 #fff;
+        padding: 20px 5vw 16px 5vw;
+        margin: 4vh auto 0 auto;
+        max-width: 370px;
+        color: #d81b60;
+        font-family: 'Montserrat', Arial, sans-serif;
+        font-size: 1em;
+        text-align: center;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 8px;
+      ">
+        <div style="font-size:1.5em; color:#ff4e8e; text-shadow:0 2px 12px #ffd6e0,0 0 16px #fff176; margin-bottom:6px;">💎 Terima kasih! 💎</div>
+        <div style="font-size:1em; margin:6px 0 4px 0;">
+          Alasan kamu benar-benar menyentuh hati...<br>
+          <span style="display:inline-block; margin-top:6px; background:linear-gradient(90deg,#fffde4,#ffb6b9,#ffe082); border-radius:12px; padding:8px 14px; color:#d81b60; font-size:0.98em; box-shadow:0 2px 12px #ffe082;">
+            “${alasan}”
+          </span>
+        </div>
+        <div style="margin:8px 0 2px 0; font-size:0.97em; color:#ff4e8e;">
+          Alasanmu akan langsung dikirim ke WhatsApp cowokmu ya!<br>
+        </div>
+        <a id="waLinkCowok" href="#" target="_blank" style="color:#fff; background:linear-gradient(90deg,#25d366,#43e97b,#38f9d7); padding:10px 22px; border-radius:14px; text-decoration:none; font-weight:bold; font-size:1em; box-shadow:0 2px 12px #b2dfdb; margin:8px 4px; display:inline-block; border:2px solid #fff;">Kirim ke WhatsApp cowokmu 💌</a>
+        <div style="margin-top:18px; font-size:0.92em; color:#bdbdbd;">
+          <hr style="border:none;border-top:1px solid #ffe0e9; margin:10px 0 6px 0;">
+          <span>Dibuat oleh <b style="color:#ff4e8e;">xobe development</b> &nbsp;|&nbsp; <a href="https://github.com/dev123dev33" target="_blank" style="color:#43e97b;text-decoration:underline;font-weight:bold;">github.com/dev123dev33</a></span>
+        </div>
+      </div>
+    `;
 
-    // Cegah keluar sebelum jawab (semaksimal mungkin)
-    window.onbeforeunload = function() {
-      if (!sudahJawab) return "Kamu belum jawab 😭";
-    };
-    document.addEventListener('visibilitychange', function() {
-      if (document.visibilityState === 'hidden' && !sudahJawab) {
-        alert("Jangan kabur dulu, jawab dulu ya 😭");
+    // Animasi kata "I love" mengambang satu per satu
+    for (let i = 0; i < 10; i++) {
+      setTimeout(() => {
+        const word = document.createElement("div");
+        word.innerText = "I love";
+        word.style.position = "fixed";
+        word.style.left = Math.random() * 90 + "vw";
+        word.style.top = Math.random() * 80 + "vh";
+        word.style.fontSize = (22 + Math.random() * 18) + "px";
+        word.style.color = "#ff4e8e";
+        word.style.opacity = 0.85;
+        word.style.fontWeight = "bold";
+        word.style.pointerEvents = "none";
+        word.style.zIndex = 99;
+        word.style.animation = "floatWord 2.5s linear forwards";
+        word.style.textShadow = "0 0 12px #ffd6e0, 0 0 18px #fff";
+        document.body.appendChild(word);
+        setTimeout(() => word.remove(), 2500);
+      }, i * 350);
+    }
+
+    // Efek animasi love tetap
+    for (let i = 0; i < 40; i++) {
+      const heart = document.createElement("div");
+      heart.classList.add("heart");
+      heart.style.left = Math.random() * 100 + "vw";
+      heart.style.animationDuration = 2.5 + Math.random() * 2 + "s";
+      heart.innerText = "💖";
+      heart.style.textShadow = "0 0 16px #fff176, 0 0 32px #ffb6b9";
+      document.body.appendChild(heart);
+      setTimeout(() => { heart.remove(); }, 5000);
+    }
+
+    // Efek confetti
+    for (let i = 0; i < 22; i++) setTimeout(spawnConfetti, i * 70);
+
+    // Buat link WhatsApp cowokmu otomatis (ganti nomornya sesuai kebutuhan)
+    setTimeout(() => {
+      const alasanEncoded = encodeURIComponent(alasan);
+      const waLinkCowok = document.getElementById('waLinkCowok');
+      if (waLinkCowok) {
+        waLinkCowok.href = `https://wa.me/6283141707524?text=Hai%20sayang%2C%20alasan%20aku%20mau%20jadi%20pacar%20kamu%20adalah%3A%20${alasanEncoded}`;
       }
-    });
-    window.addEventListener('pagehide', function(e) {
-      if (!sudahJawab) e.preventDefault();
-    });
+    }, 100);
+  };
 
-    // Untuk HP: cegah swipe back/refresh (tidak 100% bisa di semua browser)
-    window.addEventListener('touchmove', function(e) {
-      if (!sudahJawab) e.preventDefault();
-    }, { passive: false });
+  reasonInput.oninput = () => {
+    reasonInput.style.borderColor = "#ffb6b9";
+    message.innerHTML = "";
+  };
+
+  // Tombol Gak makin susah disentuh
+  function moveNoBtn(e) {
+    if (sudahJawab) return;
+    const maxX = window.innerWidth - noBtn.offsetWidth - 10;
+    const maxY = window.innerHeight - noBtn.offsetHeight - 10;
+    let x = Math.random() * maxX;
+    let y = Math.random() * maxY;
+    // Hindari terlalu dekat dengan tombol iya
+    const yesRect = yesBtn.getBoundingClientRect();
+    if (Math.abs(x - yesRect.left) < 80 && Math.abs(y - yesRect.top) < 80) {
+      x = (x + 100) % maxX;
+      y = (y + 100) % maxY;
+    }
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+    e?.preventDefault();
+    e?.stopPropagation();
+    // Efek confetti tiap gagal klik
+    for (let i = 0; i < 3; i++) setTimeout(spawnConfetti, i * 60);
+    return false;
+  }
+  noBtn.addEventListener('touchstart', moveNoBtn, { passive: false });
+  noBtn.addEventListener('mouseover', moveNoBtn);
+  noBtn.addEventListener('click', moveNoBtn);
+
+  // Cegah keluar sebelum jawab (semaksimal mungkin)
+  window.onbeforeunload = function() {
+    if (!sudahJawab) return "Kamu belum jawab 😭";
+  };
+  document.addEventListener('visibilitychange', function() {
+    if (document.visibilityState === 'hidden' && !sudahJawab) {
+      alert("Jangan kabur dulu, jawab dulu ya 😭");
+    }
+  });
+  window.addEventListener('pagehide', function(e) {
+    if (!sudahJawab) e.preventDefault();
+  });
+
+  // Untuk HP: cegah swipe back/refresh (tidak 100% bisa di semua browser)
+  window.addEventListener('touchmove', function(e) {
+    if (!sudahJawab) e.preventDefault();
+  }, { passive: false });
   </script>
 </body>
 </html>
